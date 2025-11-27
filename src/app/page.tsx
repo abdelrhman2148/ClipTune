@@ -16,10 +16,10 @@ export default function HomePage() {
               Stop letting AI ruin your cuts. ClipTune gives you a timeline to adjust the AI's suggestions—so your clips actually make sense.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/editor" className="px-8 py-4 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-lg shadow-lg shadow-indigo-500/50 transition-all hover:scale-105">
+              <a href="/editor" data-testid="try-editor-demo-btn" className="px-8 py-4 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-lg shadow-lg shadow-indigo-500/50 transition-all hover:scale-105">
                 Try Editor Demo
               </a>
-              <a href="/pricing" className="px-8 py-4 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-lg backdrop-blur-sm border border-white/20 transition-all">
+              <a href="/pricing" data-testid="view-pricing-btn" className="px-8 py-4 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-lg backdrop-blur-sm border border-white/20 transition-all">
                 View Pricing
               </a>
             </div>
