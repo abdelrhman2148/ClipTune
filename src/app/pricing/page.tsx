@@ -9,12 +9,14 @@ const PLANS = [
 ];
 
 export default function PricingPage() {
-    const [email, setEmail] = useState('');
+    const [emails, setEmails] = useState<Record<string, string>>({ pro: '', unlimited: '' });
     const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
 
     const handleJoinWaitlist = async (tier: string) => {
+        const email = emails[tier as keyof typeof emails] || '';
+
         if (!email) {
             setMessage('Please enter your email');
             return;
@@ -32,7 +34,7 @@ export default function PricingPage() {
 
             if (response.ok) {
                 setMessage('🎉 You\'re on the waitlist! We\'ll email you when this plan launches.');
-                setEmail('');
+                // Don't clear email immediately so user can see the success message
             } else {
                 setMessage('Something went wrong. Please try again.');
             }
@@ -64,7 +66,7 @@ export default function PricingPage() {
                     {PLANS.map((plan) => (
                         <div
                             key={plan.tier}
-                            className={`bg-white rounded-2xl shadow-lg p-8 border-2 transition ${plan.tier === 'pro' ? 'border-indigo-500' : 'border-slate-200 hover:border-indigo-300'
+                            className={`relative bg-white rounded-2xl shadow-lg p-8 border-2 transition ${plan.tier === 'pro' ? 'border-indigo-500' : 'border-slate-200 hover:border-indigo-300'
                                 }`}
                         >
                             {plan.tier === 'pro' && (
@@ -96,8 +98,8 @@ export default function PricingPage() {
                                     <input
                                         type="email"
                                         placeholder="your@email.com"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        value={emails[plan.tier as keyof typeof emails] || ''}
+                                        onChange={(e) => setEmails({ ...emails, [plan.tier]: e.target.value })}
                                         className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                     />
                                     <button

@@ -37,7 +37,7 @@ export function Timeline({ duration, clips, onClipChange }: TimelineProps) {
         <div className="w-full bg-slate-900 border-t border-slate-800 p-4">
             <div className="flex justify-between mb-2 text-slate-400 text-xs">
                 <span>00:00</span>
-                <span>{new Date(duration * 1000).toISOString().substr(14, 5)}</span>
+                <span>{new Date(duration * 1000).toISOString().substring(14, 19)}</span>
             </div>
 
             <div
@@ -45,7 +45,7 @@ export function Timeline({ duration, clips, onClipChange }: TimelineProps) {
                 className="relative h-32 bg-slate-800 rounded-lg overflow-hidden cursor-text select-none"
             >
                 {/* Waveform Background */}
-                {renderWaveform()}
+                {waveformHeights.length > 0 && renderWaveform()}
 
                 {/* Clips */}
                 {clips.map((clip) => (
