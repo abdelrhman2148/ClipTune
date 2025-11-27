@@ -62,7 +62,7 @@ export default function TestEmailPage() {
                                         table: 'users',
                                         record: {
                                             id: `test-user-${timestamp}`,
-                                            email: `test-${timestamp}@example.com`,
+                                            email: 'abdelrhmanfikri182017@gmail.com',
                                             created_at: new Date().toISOString(),
                                         },
                                     },
@@ -79,7 +79,7 @@ export default function TestEmailPage() {
                                     '/api/email/welcome',
                                     'POST',
                                     {
-                                        email: `test-direct-${timestamp}@example.com`,
+                                        email: 'abdelrhmanfikri182017@gmail.com',
                                         name: 'Test User',
                                     }
                                 )}
@@ -105,7 +105,7 @@ export default function TestEmailPage() {
                                 '/api/email/upgrade',
                                 'POST',
                                 {
-                                    email: `test-upgrade-${timestamp}@example.com`,
+                                    email: 'abdelrhmanfikri182017@gmail.com',
                                     creditsUsed: 2,
                                     creditsTotal: 3,
                                     discountCode: 'UPGRADE20',
@@ -132,7 +132,7 @@ export default function TestEmailPage() {
                                 '/api/email/re-engagement',
                                 'POST',
                                 {
-                                    email: `test-reengage-${timestamp}@example.com`,
+                                    email: 'abdelrhmanfikri182017@gmail.com',
                                     daysInactive: 7,
                                     discountCode: 'COMEBACK30',
                                 }

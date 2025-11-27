@@ -12,6 +12,27 @@ export function Timeline({ duration, clips, onClipChange }: TimelineProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [zoom, setZoom] = useState(1); // Pixels per second
     const [waveformHeights, setWaveformHeights] = useState<number[]>([]);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [currentTime, setCurrentTime] = useState(0);
+
+    // Keyboard shortcuts
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                setIsPlaying(prev => !prev);
+            } else if (e.code === 'ArrowLeft') {
+                e.preventDefault();
+                setCurrentTime(prev => Math.max(0, prev - 5));
+            } else if (e.code === 'ArrowRight') {
+                e.preventDefault();
+                setCurrentTime(prev => Math.min(duration, prev + 5));
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [duration]);
 
     useEffect(() => {
         // Generate random heights only on the client to avoid hydration mismatch
@@ -35,9 +56,27 @@ export function Timeline({ duration, clips, onClipChange }: TimelineProps) {
 
     return (
         <div className="w-full bg-slate-900 border-t border-slate-800 p-4">
-            <div className="flex justify-between mb-2 text-slate-400 text-xs">
-                <span>00:00</span>
-                <span>{new Date(duration * 1000).toISOString().substring(14, 19)}</span>
+            <div className="flex justify-between mb-2 text-slate-400 text-xs items-center">
+                <div className="flex gap-2">
+                    <span>{new Date(currentTime * 1000).toISOString().substring(14, 19)}</span>
+                    <span className="text-slate-600">/</span>
+                    <span>{new Date(duration * 1000).toISOString().substring(14, 19)}</span>
+                </div>
+                <div className="flex gap-2 items-center">
+                    <button
+                        onClick={() => setZoom(z => Math.max(0.5, z - 0.5))}
+                        className="px-2 py-1 bg-slate-800 rounded hover:bg-slate-700 text-xs"
+                    >
+                        -
+                    </button>
+                    <span>Zoom: {zoom}x</span>
+                    <button
+                        onClick={() => setZoom(z => Math.min(5, z + 0.5))}
+                        className="px-2 py-1 bg-slate-800 rounded hover:bg-slate-700 text-xs"
+                    >
+                        +
+                    </button>
+                </div>
             </div>
 
             <div
@@ -77,8 +116,11 @@ export function Timeline({ duration, clips, onClipChange }: TimelineProps) {
                 <button className="p-2 rounded-full bg-slate-800 hover:bg-slate-700 text-white">
                     ⏮️
                 </button>
-                <button className="p-4 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/20">
-                    ▶️
+                <button
+                    onClick={() => setIsPlaying(!isPlaying)}
+                    className="p-4 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/20"
+                >
+                    {isPlaying ? '⏸️' : '▶️'}
                 </button>
                 <button className="p-2 rounded-full bg-slate-800 hover:bg-slate-700 text-white">
                     ⏭️
