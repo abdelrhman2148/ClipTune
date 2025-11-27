@@ -20,7 +20,7 @@ export interface EmailOptions {
     from?: string;
 }
 
-export async function sendEmail({ to, subject, html, from = 'ClipTune <hello@cliptune.com>' }: EmailOptions) {
+export async function sendEmail({ to, subject, html, from = 'ClipTune <onboarding@resend.dev>' }: EmailOptions) {
     if (!process.env.RESEND_API_KEY) {
         console.warn('RESEND_API_KEY not set, email not sent:', { to, subject });
         return { success: false, error: 'Email service not configured' };
@@ -83,8 +83,8 @@ export const emailTemplates = {
     }),
 
     upgradePrompt: (name: string, creditsUsed: number, creditsTotal: number, discountCode?: string) => ({
-        subject: creditsUsed >= creditsTotal 
-            ? '🎬 Unlock unlimited creativity' 
+        subject: creditsUsed >= creditsTotal
+            ? '🎬 Unlock unlimited creativity'
             : '⚠️ You\'re running low on free credits',
         html: `
             <!DOCTYPE html>
@@ -99,10 +99,10 @@ export const emailTemplates = {
                 </div>
                 <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px;">
                     <p style="font-size: 16px; margin-bottom: 20px;">Hi ${name || 'there'},</p>
-                    ${creditsUsed >= creditsTotal 
-                        ? `<p style="font-size: 16px; margin-bottom: 20px;">You've used all ${creditsTotal} free clips this month. Great work!</p>`
-                        : `<p style="font-size: 16px; margin-bottom: 20px;">You've used ${creditsUsed} of your ${creditsTotal} free clips this month.</p>`
-                    }
+                    ${creditsUsed >= creditsTotal
+                ? `<p style="font-size: 16px; margin-bottom: 20px;">You've used all ${creditsTotal} free clips this month. Great work!</p>`
+                : `<p style="font-size: 16px; margin-bottom: 20px;">You've used ${creditsUsed} of your ${creditsTotal} free clips this month.</p>`
+            }
                     <p style="font-size: 16px; margin-bottom: 20px;"><strong>Ready for more?</strong> Upgrade to Pro and never worry about limits again:</p>
                     <div style="background: white; border: 2px solid #667eea; border-radius: 8px; padding: 20px; margin: 20px 0;">
                         <h2 style="margin-top: 0; color: #667eea;">🎯 Pro Plan - $29/month</h2>

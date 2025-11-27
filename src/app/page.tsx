@@ -31,6 +31,19 @@ export default function HomePage() {
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/30 rounded-full blur-3xl opacity-20"></div>
       </div>
 
+      {/* Demo Video Section */}
+      <div className="bg-slate-900 py-12">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="aspect-video bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl flex items-center justify-center relative overflow-hidden group cursor-pointer">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 group-hover:scale-110 transition-transform">
+              <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[18px] border-l-white border-b-[10px] border-b-transparent ml-1"></div>
+            </div>
+            <span className="absolute bottom-8 left-8 text-white font-bold text-xl">Watch the Workflow (2 min)</span>
+          </div>
+        </div>
+      </div>
+
       {/* Problem Section */}
       <div className="bg-slate-900/50 backdrop-blur-sm py-24 border-y border-white/5">
         <div className="max-w-6xl mx-auto px-6">
@@ -75,6 +88,54 @@ export default function HomePage() {
         </div>
       </div>
 
+
+      {/* Testimonials Section */}
+      <div className="bg-slate-800/30 py-24 border-y border-white/5">
+        <div className="max-w-6xl mx-auto px-6">
+          <h2 className="text-3xl sm:text-5xl font-bold text-white text-center mb-16">
+            Loved by Creators
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { name: "Sarah J.", role: "YouTuber (150k subs)", quote: "Finally, an AI tool that doesn't make my clips look like spam. The timeline control is a game changer." },
+              { name: "Mark D.", role: "Podcast Host", quote: "I used to spend 4 hours clipping my podcast. Now it takes 20 minutes and the quality is actually better." },
+              { name: "AgencyFlow", role: "Marketing Agency", quote: "We manage 10 clients and ClipTune is the only way we can keep up with the volume without hiring more editors." }
+            ].map((t, i) => (
+              <div key={i} className="p-8 rounded-2xl bg-slate-900 border border-slate-800">
+                <div className="flex gap-1 text-yellow-500 mb-4">★★★★★</div>
+                <p className="text-slate-300 mb-6 italic">"{t.quote}"</p>
+                <div>
+                  <div className="font-bold text-white">{t.name}</div>
+                  <div className="text-sm text-slate-500">{t.role}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* FAQ Section */}
+      <div className="py-24">
+        <div className="max-w-3xl mx-auto px-6">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-6">
+            {[
+              { q: "Does it work with any video?", a: "Yes! We support MP4, MOV, and AVI files up to 2GB. It works best with spoken content like podcasts, interviews, and commentary." },
+              { q: "Can I edit the captions?", a: "Absolutely. You can edit text, change fonts, colors, and position directly in the editor." },
+              { q: "Is there a watermark?", a: "The Free plan includes a small watermark. Upgrade to Pro to remove it and unlock 4K exports." },
+              { q: "Can I cancel anytime?", a: "Yes, you can cancel your subscription at any time from your dashboard. No questions asked." }
+            ].map((faq, i) => (
+              <div key={i} className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                <h3 className="font-bold text-white text-lg mb-2">{faq.q}</h3>
+                <p className="text-slate-400">{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* CTA Section */}
       <div className="py-24 border-t border-white/5">
         <div className="max-w-4xl mx-auto px-6 text-center">
@@ -103,6 +164,6 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
-    </div>
+    </div >
   );
 }
