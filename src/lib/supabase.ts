@@ -1,15 +1,35 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key';
+let supabaseClient: SupabaseClient | null = null;
 
-console.log('Supabase Init:', { 
-  url: supabaseUrl, 
-  hasKey: !!supabaseAnonKey, 
-  isPlaceholder: supabaseUrl === 'https://placeholder.supabase.co' 
+function getSupabaseClient(): SupabaseClient {
+    if (supabaseClient) {
+        return supabaseClient;
+    }
+
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    // Only create client if we have valid credentials
+    if (!supabaseUrl || !supabaseAnonKey) {
+        // Return a mock client that will fail gracefully at runtime
+        // Use a valid URL format to pass Supabase's validation
+        supabaseClient = createClient(
+            'https://placeholder.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwiaWF0IjoxNjQwOTk5OTk5LCJleHAiOjE5NTY1NzU5OTl9.placeholder'
+        );
+        return supabaseClient;
+    }
+
+    supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+    return supabaseClient;
+}
+
+export const supabase = new Proxy({} as SupabaseClient, {
+    get(_target, prop) {
+        return getSupabaseClient()[prop as keyof SupabaseClient];
+    }
 });
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Database types
 export interface User {

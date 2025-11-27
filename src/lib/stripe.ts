@@ -1,8 +1,33 @@
 import Stripe from 'stripe';
 
-// Initialize Stripe on the server side
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
-    apiVersion: '2025-11-17.clover' as any, // Cast to any if strict typing fails on version
+let stripeClient: Stripe | null = null;
+
+function getStripeClient(): Stripe {
+    if (stripeClient) {
+        return stripeClient;
+    }
+
+    const secretKey = process.env.STRIPE_SECRET_KEY;
+    
+    if (!secretKey) {
+        // Return a client with placeholder key that will fail gracefully at runtime
+        stripeClient = new Stripe('sk_test_placeholder', {
+            apiVersion: '2025-11-17.clover' as any,
+        });
+        return stripeClient;
+    }
+
+    stripeClient = new Stripe(secretKey, {
+        apiVersion: '2025-11-17.clover' as any,
+    });
+    return stripeClient;
+}
+
+// Initialize Stripe on the server side (lazy)
+export const stripe = new Proxy({} as Stripe, {
+    get(_target, prop) {
+        return getStripeClient()[prop as keyof Stripe];
+    }
 });
 
 // Pricing tiers
