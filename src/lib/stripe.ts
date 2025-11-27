@@ -1,8 +1,26 @@
 import Stripe from 'stripe';
 
-// Initialize Stripe on the server side
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2025-11-17.clover',
+let _stripe: Stripe | null = null;
+
+// Initialize Stripe lazily to avoid build-time errors
+export const getStripe = () => {
+    if (!_stripe) {
+        const secretKey = process.env.STRIPE_SECRET_KEY;
+        if (!secretKey) {
+            throw new Error('Missing STRIPE_SECRET_KEY environment variable');
+        }
+        _stripe = new Stripe(secretKey, {
+            apiVersion: '2025-11-17.clover',
+        });
+    }
+    return _stripe;
+};
+
+// For backwards compatibility - lazy getter
+export const stripe = new Proxy({} as Stripe, {
+    get(_, prop) {
+        return getStripe()[prop as keyof Stripe];
+    }
 });
 
 // Pricing tiers
