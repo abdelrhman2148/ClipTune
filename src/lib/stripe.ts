@@ -1,8 +1,8 @@
 import Stripe from 'stripe';
 
 // Initialize Stripe on the server side
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2025-11-17.clover',
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
+    apiVersion: '2025-11-17.clover' as any, // Cast to any if strict typing fails on version
 });
 
 // Pricing tiers
