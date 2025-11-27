@@ -139,3 +139,4 @@ echo ""
 echo "Note: If RESEND_API_KEY is not set, emails won't actually send"
 echo "but the API endpoints should still return success responses."
 
+

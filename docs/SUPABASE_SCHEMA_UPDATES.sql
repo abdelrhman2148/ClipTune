@@ -69,3 +69,4 @@ FROM feedback
 GROUP BY category, rating, DATE(created_at)
 ORDER BY date DESC, category, rating;
 
+

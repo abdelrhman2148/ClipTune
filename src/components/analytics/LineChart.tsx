@@ -58,3 +58,4 @@ export function LineChart({ data, title, dataKey = 'count', color = '#818cf8' }:
     );
 }
 
+
