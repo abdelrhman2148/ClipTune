@@ -1,9 +1,38 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+let supabaseClient: SupabaseClient | null = null;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+function getSupabaseClient(): SupabaseClient {
+    if (!supabaseClient) {
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+        if (!supabaseUrl || !supabaseAnonKey) {
+            throw new Error('Missing Supabase environment variables: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are required');
+        }
+
+        supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+    }
+    return supabaseClient;
+}
+
+// Lazy initialization - only creates client when accessed at runtime
+// This prevents build-time errors when env vars aren't available
+export const supabase = new Proxy({} as SupabaseClient, {
+    get(_target, prop) {
+        const client = getSupabaseClient();
+        const value = client[prop as keyof SupabaseClient];
+        // If it's a function, bind it to the client
+        if (typeof value === 'function') {
+            return value.bind(client);
+        }
+        // If it's an object (like .from()), return a proxy for it too
+        if (typeof value === 'object' && value !== null) {
+            return value;
+        }
+        return value;
+    }
+});
 
 // Database types
 export interface User {

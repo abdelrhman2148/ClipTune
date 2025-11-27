@@ -3,6 +3,8 @@ import { stripe } from '@/lib/stripe';
 import { supabase } from '@/lib/supabase';
 import Stripe from 'stripe';
 
+export const dynamic = 'force-dynamic';
+
 // Stripe webhook to handle subscription events
 export async function POST(request: Request) {
     const body = await request.text();
@@ -27,6 +29,13 @@ export async function POST(request: Request) {
             const userId = session.metadata?.userId;
 
             if (userId && session.subscription) {
+                // Update user subscription
+                const { data: user } = await supabase
+                    .from('users')
+                    .select('email, subscription_tier')
+                    .eq('id', userId)
+                    .single();
+
                 await supabase
                     .from('users')
                     .update({
@@ -34,6 +43,9 @@ export async function POST(request: Request) {
                         subscription_tier: 'pro', // Determine from price_id in real app
                     })
                     .eq('id', userId);
+
+                // Note: Welcome email for subscription upgrade can be added here
+                // Currently handled by webhook, but can trigger upgrade confirmation email
             }
             break;
         }

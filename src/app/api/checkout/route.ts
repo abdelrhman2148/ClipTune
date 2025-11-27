@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { stripe, PRICING_PLANS } from '@/lib/stripe';
 import { supabase } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
     try {
         const { priceId, userId, email } = await request.json();

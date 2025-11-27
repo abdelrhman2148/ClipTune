@@ -1,8 +1,36 @@
 import Stripe from 'stripe';
 
-// Initialize Stripe on the server side
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2025-11-17.clover',
+let stripeClient: Stripe | null = null;
+
+function getStripeClient(): Stripe {
+    if (!stripeClient) {
+        const secretKey = process.env.STRIPE_SECRET_KEY;
+        if (!secretKey) {
+            throw new Error('Missing STRIPE_SECRET_KEY environment variable');
+        }
+        stripeClient = new Stripe(secretKey, {
+            apiVersion: '2025-11-17.clover',
+        });
+    }
+    return stripeClient;
+}
+
+// Lazy initialization - only creates client when accessed at runtime
+// This prevents build-time errors when env vars aren't available
+export const stripe = new Proxy({} as Stripe, {
+    get(_target, prop) {
+        const client = getStripeClient();
+        const value = client[prop as keyof Stripe];
+        // If it's a function, bind it to the client
+        if (typeof value === 'function') {
+            return value.bind(client);
+        }
+        // If it's an object (like .customers), return it directly
+        if (typeof value === 'object' && value !== null) {
+            return value;
+        }
+        return value;
+    }
 });
 
 // Pricing tiers
